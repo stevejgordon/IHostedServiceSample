@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,11 +19,18 @@ namespace IHostedServiceSample
 
         public async Task UpdateString(CancellationToken cancellationToken)
         {
-            var response = await _httpClient.GetAsync(RandomStringUri, cancellationToken);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                RandomString = await response.Content.ReadAsStringAsync();
+                var response = await _httpClient.GetAsync(RandomStringUri, cancellationToken);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    RandomString = await response.Content.ReadAsStringAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
             }
         }
 
